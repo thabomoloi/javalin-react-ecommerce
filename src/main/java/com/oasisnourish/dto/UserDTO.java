@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import com.oasisnourish.enums.Role;
+import com.oasisnourish.models.User;
 
 public class UserDTO {
 
@@ -74,5 +75,9 @@ public class UserDTO {
 
   public void setEmailVerified(LocalDateTime emailVerified) {
     this.emailVerified = emailVerified;
+  }
+
+  public static UserDTO fromUser(User user) {
+    return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getRole(), user.getEmailVerified());
   }
 }

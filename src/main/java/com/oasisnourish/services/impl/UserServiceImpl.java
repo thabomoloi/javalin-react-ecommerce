@@ -1,19 +1,16 @@
 package com.oasisnourish.services.impl;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
 
 import com.oasisnourish.dao.UserDAO;
 import com.oasisnourish.dto.UserInputDTO;
 import com.oasisnourish.dto.ValidationGroup;
+import com.oasisnourish.exceptions.NotFoundException;
 import com.oasisnourish.models.User;
 import com.oasisnourish.services.UserService;
 import com.oasisnourish.utils.PasswordUtil;
 import com.oasisnourish.utils.ValidationUtil;
 
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
 public class UserServiceImpl implements UserService {
@@ -24,13 +21,15 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Optional<User> getUserById(int id) {
-    return userDAO.get(id);
+  public User getUserById(int id) throws NotFoundException {
+    return userDAO.get(id)
+        .orElseThrow(() -> new NotFoundException("User with ID " + id + " not found."));
   }
 
   @Override
-  public Optional<User> getUserByEmail(String email) {
-    return userDAO.getByEmail(email);
+  public User getUserByEmail(String email) throws NotFoundException {
+    return userDAO.getByEmail(email)
+        .orElseThrow(() -> new NotFoundException("User with email " + email + " not found."));
   }
 
   @Override
@@ -39,61 +38,46 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void createUser(UserInputDTO userDTO) throws ConstraintViolationException {
-    Set<ConstraintViolation<UserInputDTO>> violations = ValidationUtil.validate(userDTO, ValidationGroup.Create.class);
-
-    if (!violations.isEmpty()) {
-      StringBuilder sb = new StringBuilder();
-      for (ConstraintViolation<UserInputDTO> violation : violations) {
-        sb.append(violation.getMessage()).append("\n");
-      }
-      throw new ConstraintViolationException(sb.toString(), violations);
-    }
+  public User createUser(UserInputDTO userDTO) throws ConstraintViolationException {
+    ValidationUtil.validate(userDTO, ValidationGroup.Create.class);
 
     User user = new User();
     user.setName(userDTO.getName());
     user.setEmail(userDTO.getEmail());
     user.setPassword(PasswordUtil.hashPassword(userDTO.getPassword()));
-    userDAO.save(user);
+    return userDAO.save(user);
   }
 
   @Override
-  public void updateUser(UserInputDTO userDTO) {
-    Set<ConstraintViolation<UserInputDTO>> violations = ValidationUtil.validate(userDTO, ValidationGroup.Update.class);
+  public User updateUser(UserInputDTO userDTO) throws NotFoundException, ConstraintViolationException {
+    ValidationUtil.validate(userDTO, ValidationGroup.Update.class);
 
     if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-      violations.addAll(ValidationUtil.validate(userDTO, ValidationGroup.Create.class));
+      ValidationUtil.validate(userDTO, ValidationGroup.Create.class);
     }
 
-    if (!violations.isEmpty()) {
-      StringBuilder sb = new StringBuilder();
-      for (ConstraintViolation<UserInputDTO> violation : violations) {
-        sb.append(violation.getMessage()).append("\n");
-      }
-      throw new ConstraintViolationException(sb.toString(), violations);
+    User user = userDAO.get(userDTO.getId())
+        .orElseThrow(() -> new NotFoundException("User with ID " + userDTO.getId() + " not found."));
+
+    if (!user.getEmail().equals(userDTO.getEmail())) {
+      user.setEmailVerified(null);
     }
 
-    Optional<User> existingUser = userDAO.get(userDTO.getId());
-    if (existingUser.isPresent()) {
-      User user = existingUser.get();
-      user.setName(userDTO.getName());
-      user.setEmail(userDTO.getEmail());
-      if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-        user.setPassword(PasswordUtil.hashPassword(userDTO.getPassword()));
-      }
-      userDAO.update(user);
+    user.setName(userDTO.getName());
+    user.setEmail(userDTO.getEmail());
+
+    if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+      user.setPassword(PasswordUtil.hashPassword(userDTO.getPassword()));
     }
-    // throw not found exception
+    return userDAO.update(user).get();
+
   }
 
   @Override
-  public void deleteUser(int id) {
-    try {
-      User user = userDAO.get(id).orElseThrow();
-      userDAO.delete(user.getId());
-    } catch (NoSuchElementException e) {
-      throw e;
-    }
+  public void deleteUser(int id) throws NotFoundException {
+    User user = userDAO.get(id)
+        .orElseThrow(() -> new NotFoundException("User with ID " + id + " not found."));
+    userDAO.delete(user.getId());
   }
 
 }

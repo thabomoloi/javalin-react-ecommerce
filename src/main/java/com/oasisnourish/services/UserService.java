@@ -6,6 +6,8 @@ import com.oasisnourish.dto.UserInputDTO;
 import com.oasisnourish.exceptions.NotFoundException;
 import com.oasisnourish.models.User;
 
+import jakarta.validation.ConstraintViolationException;
+
 public interface UserService {
   User getUserById(int id) throws NotFoundException;
 
@@ -13,9 +15,9 @@ public interface UserService {
 
   List<User> getAllUsers();
 
-  void createUser(UserInputDTO user);
+  User createUser(UserInputDTO user) throws ConstraintViolationException;
 
-  void updateUser(UserInputDTO user) throws NotFoundException;
+  User updateUser(UserInputDTO user) throws NotFoundException, ConstraintViolationException;
 
   void deleteUser(int id) throws NotFoundException;
 }

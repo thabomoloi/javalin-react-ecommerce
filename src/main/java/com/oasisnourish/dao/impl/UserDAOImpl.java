@@ -41,6 +41,7 @@ public class UserDAOImpl implements UserDAO {
       }
     } catch (SQLException e) {
       logger.error("Error getting user with ID: " + id, e);
+      throw new RuntimeException(e);
     }
     return Optional.empty();
   }
@@ -57,29 +58,50 @@ public class UserDAOImpl implements UserDAO {
       }
     } catch (SQLException e) {
       logger.error("Error getting all users", e);
+      throw new RuntimeException(e);
     }
     return users;
   }
 
   @Override
-  public void save(User user) {
+  public User save(User user) {
     try (Connection connection = DatabaseConnection.getConnection();
         PreparedStatement ps = connection.prepareStatement(INSERT_USER)) {
       mapUserToRow(ps, user);
       ps.executeUpdate();
+
+      try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+        if (generatedKeys.next()) {
+          user.setId(generatedKeys.getInt(1)); // Set the generated ID to the user
+        }
+      }
+      return user;
     } catch (SQLException e) {
       logger.error("Error saving user: " + user, e);
+      throw new RuntimeException(e);
     }
   }
 
   @Override
-  public void update(User user) {
+  public Optional<User> update(User user) {
     try (Connection connection = DatabaseConnection.getConnection();
         PreparedStatement ps = connection.prepareStatement(UPDATE_USER)) {
+
+      // Map the user data to the prepared statement
       mapUserToRow(ps, user);
-      ps.executeUpdate();
+      ps.setInt(6, user.getId()); // Set the ID for the WHERE clause
+
+      int rowsAffected = ps.executeUpdate();
+
+      if (rowsAffected == 0) {
+        logger.warn("User with ID " + user.getId() + " not found for update.");
+        return Optional.empty(); // Return an empty Optional if the user ID is not found
+      }
+
+      return Optional.of(user); // Return the updated user object
     } catch (SQLException e) {
       logger.error("Error updating user: " + user, e);
+      throw new RuntimeException(e);
     }
   }
 
@@ -91,6 +113,7 @@ public class UserDAOImpl implements UserDAO {
       ps.executeUpdate();
     } catch (SQLException e) {
       logger.error("Error deleting user with ID: " + id, e);
+      throw new RuntimeException(e);
     }
   }
 
@@ -107,6 +130,7 @@ public class UserDAOImpl implements UserDAO {
       }
     } catch (SQLException e) {
       logger.error("Error getting user with email: " + email, e);
+      throw new RuntimeException(e);
     }
     return Optional.empty();
   }
@@ -124,8 +148,9 @@ public class UserDAOImpl implements UserDAO {
   private void mapUserToRow(PreparedStatement ps, User user) throws SQLException {
     ps.setString(1, user.getName());
     ps.setString(2, user.getEmail());
-    ps.setTimestamp(2, Timestamp.valueOf(user.getEmailVerified()));
-    ps.setString(2, user.getRole().name());
-    ps.setString(2, user.getPassword());
+    ps.setTimestamp(3, Timestamp.valueOf(user.getEmailVerified()));
+    ps.setString(4, user.getRole().name());
+    ps.setString(5, user.getPassword());
   }
+
 }
