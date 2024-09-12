@@ -1,68 +1,136 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
   }
-  a:hover {
-    color: #747bff;
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
   }
-  button {
-    background-color: #f9f9f9;
+}
+@layer base {
+  :root {
+    /* Primary */
+    --light-blue1: 201 100% 96%;
+    --light-blue2: 200 88% 90%;
+    --light-blue3: 200 71% 80%;
+    --light-blue4: 200 66% 69%;
+    --light-blue5: 200 60% 58%;
+    --light-blue6: 200 54% 49%;
+    --light-blue7: 200 59% 43%;
+    --light-blue8: 200 68% 35%;
+    --light-blue9: 200 72% 31%;
+    --light-blue10: 200 82% 24%;
+
+    --green1: 125 65% 93%;
+    --green2: 126 49% 84%;
+    --green3: 122 42% 75%;
+    --green4: 123 38% 63%;
+    --green5: 123 35% 51%;
+    --green6: 122 39% 41%;
+    --green7: 122 47% 35%;
+    --green8: 125 56% 29%;
+    --green9: 125 73% 20%;
+    --green10: 125 86% 14%;
+
+    /* Neutrals */
+    --cool-gray1: 216 33% 97%;
+    --cool-gray2: 214 15% 91%;
+    --cool-gray3: 210 16% 82%;
+    --cool-gray4: 211 13% 65%;
+    --cool-gray5: 211 10% 53%;
+    --cool-gray6: 211 12% 43%;
+    --cool-gray7: 209 14% 37%;
+    --cool-gray8: 209 18% 30%;
+    --cool-gray9: 209 20% 25%;
+    --cool-gray10: 210 24% 16%;
+
+    /* Supporting */
+    --purple1: 262 61% 93%;
+    --purple2: 261 68% 84%;
+    --purple3: 261 54% 68%;
+    --purple4: 261 47% 58%;
+    --purple5: 262 43% 51%;
+    --purple6: 262 48% 46%;
+    --purple7: 262 60% 38%;
+    --purple8: 262 69% 31%;
+    --purple9: 262 72% 25%;
+    --purple10: 263 85% 18%;
+
+    --red1: 360 100% 97%;
+    --red2: 360 82% 89%;
+    --red3: 360 77% 78%;
+    --red4: 360 71% 66%;
+    --red5: 360 64% 55%;
+    --red6: 360 67% 44%;
+    --red7: 360 72% 38%;
+    --red8: 360 79% 32%;
+    --red9: 360 85% 25%;
+    --red10: 360 92% 20%;
+
+    --yellow1: 45 100% 96%;
+    --yellow2: 45 90% 88%;
+    --yellow3: 45 86% 81%;
+    --yellow4: 43 90% 76%;
+    --yellow5: 43 89% 70%;
+    --yellow6: 42 78% 60%;
+    --yellow7: 42 63% 48%;
+    --yellow8: 43 72% 37%;
+    --yellow9: 43 77% 27%;
+    --yellow10: 43 86% 17%;
+  }
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
