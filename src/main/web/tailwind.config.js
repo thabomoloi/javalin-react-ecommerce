@@ -12,57 +12,9 @@ export default {
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        chart: {
-          1: "hsl(var(--chart-1))",
-          2: "hsl(var(--chart-2))",
-          3: "hsl(var(--chart-3))",
-          4: "hsl(var(--chart-4))",
-          5: "hsl(var(--chart-5))",
-        },
-        primaryLightBlue: {
-          1: "hsl(var(--light-blue1))",
-          2: "hsl(var(--light-blue2))",
-          3: "hsl(var(--light-blue3))",
-          4: "hsl(var(--light-blue4))",
-          5: "hsl(var(--light-blue5))",
-          6: "hsl(var(--light-blue6))",
-          7: "hsl(var(--light-blue7))",
-          8: "hsl(var(--light-blue8))",
-          9: "hsl(var(--light-blue9))",
-          10: "hsl(var(--light-blue10))",
-        },
-        primaryGreen: {
+        primary1: {
+          DEFAULT: "hsl(var(--primary1))",
+          foreground: "hsl(var(--primary1-foreground))",
           1: "hsl(var(--green1))",
           2: "hsl(var(--green2))",
           3: "hsl(var(--green3))",
@@ -74,7 +26,22 @@ export default {
           9: "hsl(var(--green9))",
           10: "hsl(var(--green10))",
         },
-        neutralCoolGray: {
+        primary2: {
+          DEFAULT: "hsl(var(--primary2))",
+          foreground: "hsl(var(--primary2-foreground))",
+          1: "hsl(var(--light-blue1))",
+          2: "hsl(var(--light-blue2))",
+          3: "hsl(var(--light-blue3))",
+          4: "hsl(var(--light-blue4))",
+          5: "hsl(var(--light-blue5))",
+          6: "hsl(var(--light-blue6))",
+          7: "hsl(var(--light-blue7))",
+          8: "hsl(var(--light-blue8))",
+          9: "hsl(var(--light-blue9))",
+          10: "hsl(var(--light-blue10))",
+        },
+        neutral: {
+          DEFAULT: "hsl(var(--cool-gray5))",
           1: "hsl(var(--cool-gray1))",
           2: "hsl(var(--cool-gray2))",
           3: "hsl(var(--cool-gray3))",
@@ -86,7 +53,7 @@ export default {
           9: "hsl(var(--cool-gray9))",
           10: "hsl(var(--cool-gray10))",
         },
-        secondaryPurple: {
+        purple: {
           1: "hsl(var(--purple1))",
           2: "hsl(var(--purple2))",
           3: "hsl(var(--purple3))",
@@ -98,7 +65,7 @@ export default {
           9: "hsl(var(--purple9))",
           10: "hsl(var(--purple10))",
         },
-        secondaryRed: {
+        red: {
           1: "hsl(var(--red1))",
           2: "hsl(var(--red2))",
           3: "hsl(var(--red3))",
@@ -110,17 +77,29 @@ export default {
           9: "hsl(var(--red9))",
           10: "hsl(var(--red10))",
         },
-        secondaryYellow: {
-          1: "hsl(var(--light-blue1))",
-          2: "hsl(var(--light-blue2))",
-          3: "hsl(var(--light-blue3))",
-          4: "hsl(var(--light-blue4))",
-          5: "hsl(var(--light-blue5))",
-          6: "hsl(var(--light-blue6))",
-          7: "hsl(var(--light-blue7))",
-          8: "hsl(var(--light-blue8))",
-          9: "hsl(var(--light-blue9))",
-          10: "hsl(var(--light-blue10))",
+        yellow: {
+          1: "hsl(var(--yellow1))",
+          2: "hsl(var(--yellow2))",
+          3: "hsl(var(--yellow3))",
+          4: "hsl(var(--yellow4))",
+          5: "hsl(var(--yellow5))",
+          6: "hsl(var(--yellow6))",
+          7: "hsl(var(--yellow7))",
+          8: "hsl(var(--yellow8))",
+          9: "hsl(var(--yellow9))",
+          10: "hsl(var(--yellow10))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
         },
       },
     },

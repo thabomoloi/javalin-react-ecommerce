@@ -21,7 +21,7 @@ public class UserInputDTO {
 
   @NotNull(message = "Password cannot be null", groups = ValidationGroup.Create.class)
   @Size(min = 8, max = 16, message = "Password must be between 8 and 16 characters", groups = ValidationGroup.Create.class)
-  @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#$%^&+=]).*$", message = "Password must contain at least one letter, one digit, and one special character (@, #, $, %, ^, &, +, =)", groups = ValidationGroup.Create.class)
+  @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=]).*$", message = "Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character (@, #, $, %, ^, &, +, =)", groups = ValidationGroup.Create.class)
   private String password;
 
   public UserInputDTO() {
