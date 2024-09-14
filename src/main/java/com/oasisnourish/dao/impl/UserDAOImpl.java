@@ -138,9 +138,12 @@ public class UserDAOImpl implements UserDAO {
   private User mapRowToUser(ResultSet rs) throws SQLException {
     User user = new User();
     user.setId(rs.getInt("id"));
+    user.setName(rs.getString("name"));
     user.setEmail(rs.getString("email"));
     user.setRole(Role.valueOf(rs.getString("role")));
-    user.setEmailVerified(rs.getTimestamp("email_verified").toLocalDateTime());
+    Timestamp emailVerifiedTS = rs.getTimestamp("email_verified");
+    var emailVerifiedDT = emailVerifiedTS == null ? null : emailVerifiedTS.toLocalDateTime();
+    user.setEmailVerified(emailVerifiedDT);
     user.setPassword(rs.getString("password"));
     return user;
   }
@@ -148,7 +151,8 @@ public class UserDAOImpl implements UserDAO {
   private void mapUserToRow(PreparedStatement ps, User user) throws SQLException {
     ps.setString(1, user.getName());
     ps.setString(2, user.getEmail());
-    ps.setTimestamp(3, Timestamp.valueOf(user.getEmailVerified()));
+    var emailVerifiedTS = user.getEmailVerified() == null ? null : Timestamp.valueOf(user.getEmailVerified());
+    ps.setTimestamp(3, emailVerifiedTS);
     ps.setString(4, user.getRole().name());
     ps.setString(5, user.getPassword());
   }

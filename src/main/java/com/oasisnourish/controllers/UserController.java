@@ -4,10 +4,12 @@ import java.util.stream.Collectors;
 
 import com.oasisnourish.dto.UserDTO;
 import com.oasisnourish.dto.UserInputDTO;
+import com.oasisnourish.exceptions.EmailExistsException;
 import com.oasisnourish.exceptions.NotFoundException;
 import com.oasisnourish.services.UserService;
 
 import io.javalin.http.Context;
+import jakarta.validation.ConstraintViolationException;
 
 public class UserController {
   private final UserService userService;
@@ -29,7 +31,7 @@ public class UserController {
     ctx.json(users);
   }
 
-  public void createUser(Context ctx) throws NotFoundException {
+  public void createUser(Context ctx) throws ConstraintViolationException, EmailExistsException {
     var userDTO = ctx.bodyAsClass(UserInputDTO.class);
     var user = userService.createUser(userDTO);
     ctx.status(201);

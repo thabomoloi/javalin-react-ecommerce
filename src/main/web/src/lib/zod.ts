@@ -5,7 +5,7 @@ const email = z
   .min(1, { message: "Email is required" })
   .email("Invalid email address");
 
-const name = z.string().min(1, "Name is required");
+const name = z.string().min(3, "Name must be at least 3 characters long");
 const password = z
   .string()
   .min(8, "Password must be at least 8 characters long")

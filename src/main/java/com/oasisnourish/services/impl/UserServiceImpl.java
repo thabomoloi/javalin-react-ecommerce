@@ -5,6 +5,7 @@ import java.util.List;
 import com.oasisnourish.dao.UserDAO;
 import com.oasisnourish.dto.UserInputDTO;
 import com.oasisnourish.dto.ValidationGroup;
+import com.oasisnourish.exceptions.EmailExistsException;
 import com.oasisnourish.exceptions.NotFoundException;
 import com.oasisnourish.models.User;
 import com.oasisnourish.services.UserService;
@@ -38,8 +39,12 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User createUser(UserInputDTO userDTO) throws ConstraintViolationException {
+  public User createUser(UserInputDTO userDTO) throws ConstraintViolationException, EmailExistsException {
     ValidationUtil.validate(userDTO, ValidationGroup.Create.class);
+
+    if (userDAO.getByEmail(userDTO.getEmail()) != null) {
+      throw new EmailExistsException("The email has already been taken");
+    }
 
     User user = new User();
     user.setName(userDTO.getName());

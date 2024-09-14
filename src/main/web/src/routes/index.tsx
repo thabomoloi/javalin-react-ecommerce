@@ -4,6 +4,7 @@ import { SignInPage } from "@/pages/auth/signin";
 import { HomePage } from "@/pages/home";
 import { RootLayout } from "@/pages/root-layout";
 import { createBrowserRouter } from "react-router-dom";
+import { signUpAction } from "./actions";
 
 export const router = createBrowserRouter([
   {
@@ -16,7 +17,7 @@ export const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { path: "signin", element: <SignInPage /> },
-      { path: "signup", element: <SignUpPage /> },
+      { path: "signup", action: signUpAction, element: <SignUpPage /> },
     ],
   },
 ]);

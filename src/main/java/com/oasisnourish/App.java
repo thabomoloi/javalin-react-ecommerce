@@ -3,10 +3,12 @@ package com.oasisnourish;
 import com.oasisnourish.controllers.ExceptionsControler;
 import com.oasisnourish.controllers.UserController;
 import com.oasisnourish.dao.impl.UserDAOImpl;
+import com.oasisnourish.exceptions.EmailExistsException;
 import com.oasisnourish.exceptions.NotFoundException;
 import com.oasisnourish.services.impl.UserServiceImpl;
 
 import io.javalin.Javalin;
+import jakarta.validation.ConstraintViolationException;
 
 public class App {
     private final static UserController userController = new UserController(new UserServiceImpl(new UserDAOImpl()));
@@ -17,6 +19,8 @@ public class App {
         app.start(7070);
 
         // Exceptions
+        app.exception(EmailExistsException.class, ExceptionsControler::badRequest);
+        app.exception(ConstraintViolationException.class, ExceptionsControler::validationError);
         app.exception(NotFoundException.class, ExceptionsControler::notFound);
         app.exception(Exception.class, ExceptionsControler::internalServerError);
 

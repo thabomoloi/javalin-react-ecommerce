@@ -1,25 +1,26 @@
 package com.oasisnourish.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class UserInputDTO {
 
-  @NotNull(message = "Id cannot be null", groups = ValidationGroup.Create.class)
+  @NotNull(message = "Id cannot be null", groups = ValidationGroup.Update.class)
   private int id;
 
-  @NotNull(message = "Name cannot be null", groups = { ValidationGroup.Create.class, ValidationGroup.Update.class })
+  @NotNull(message = "Name cannot be blank", groups = { ValidationGroup.Create.class, ValidationGroup.Update.class })
   @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters", groups = {
       ValidationGroup.Create.class, ValidationGroup.Update.class })
   private String name;
 
-  @NotNull(message = "Email cannot be null", groups = { ValidationGroup.Create.class, ValidationGroup.Update.class })
+  @NotBlank(message = "Email cannot be blank", groups = { ValidationGroup.Create.class, ValidationGroup.Update.class })
   @Email(message = "Email should be valid", groups = { ValidationGroup.Create.class, ValidationGroup.Update.class })
   private String email;
 
-  @NotNull(message = "Password cannot be null", groups = ValidationGroup.Create.class)
+  @NotBlank(message = "Password cannot be blank", groups = ValidationGroup.Create.class)
   @Size(min = 8, max = 16, message = "Password must be between 8 and 16 characters", groups = ValidationGroup.Create.class)
   @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=]).*$", message = "Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character (@, #, $, %, ^, &, +, =)", groups = ValidationGroup.Create.class)
   private String password;
