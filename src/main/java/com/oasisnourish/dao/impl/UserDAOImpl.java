@@ -30,7 +30,7 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public Optional<User> get(int id) {
-    try (Connection connection = DatabaseConnection.getConnection();
+    try (Connection connection = DatabaseConnection.getJdbcConnection();
         PreparedStatement ps = connection.prepareStatement(GET_USER_BY_ID)) {
       ps.setInt(1, id);
       try (ResultSet rs = ps.executeQuery()) {
@@ -49,7 +49,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public List<User> getAll() {
     List<User> users = new ArrayList<>();
-    try (Connection connection = DatabaseConnection.getConnection();
+    try (Connection connection = DatabaseConnection.getJdbcConnection();
         PreparedStatement ps = connection.prepareStatement(GET_ALL_USERS);
         ResultSet rs = ps.executeQuery()) {
       while (rs.next()) {
@@ -65,7 +65,7 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public User save(User user) {
-    try (Connection connection = DatabaseConnection.getConnection();
+    try (Connection connection = DatabaseConnection.getJdbcConnection();
         PreparedStatement ps = connection.prepareStatement(INSERT_USER)) {
       mapUserToRow(ps, user);
       ps.executeUpdate();
@@ -84,7 +84,7 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public Optional<User> update(User user) {
-    try (Connection connection = DatabaseConnection.getConnection();
+    try (Connection connection = DatabaseConnection.getJdbcConnection();
         PreparedStatement ps = connection.prepareStatement(UPDATE_USER)) {
 
       // Map the user data to the prepared statement
@@ -107,7 +107,7 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public void delete(int id) {
-    try (Connection connection = DatabaseConnection.getConnection();
+    try (Connection connection = DatabaseConnection.getJdbcConnection();
         PreparedStatement ps = connection.prepareStatement(DELETE_USER)) {
       ps.setInt(1, id);
       ps.executeUpdate();
@@ -119,7 +119,7 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public Optional<User> getByEmail(String email) {
-    try (Connection connection = DatabaseConnection.getConnection();
+    try (Connection connection = DatabaseConnection.getJdbcConnection();
         PreparedStatement ps = connection.prepareStatement(GET_USER_BY_EMAIL)) {
       ps.setString(1, email);
       try (ResultSet rs = ps.executeQuery()) {

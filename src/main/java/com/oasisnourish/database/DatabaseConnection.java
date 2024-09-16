@@ -8,13 +8,19 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import redis.clients.jedis.JedisPooled;
 
 public class DatabaseConnection {
+  private static final Dotenv dotenv = EnvironmentConfig.getDotenv();
   private static final HikariDataSource dataSource;
+  private static final JedisPooled jedis;
 
   static {
-    Dotenv dotenv = EnvironmentConfig.getDotenv();
-    // Load DB URL and credentials from environment variables
+    dataSource = setUpJdbcConnection();
+    jedis = setUpRedisConnection();
+  }
+
+  private static HikariDataSource setUpJdbcConnection() {
     String url = dotenv.get("DB_URL");
     String username = dotenv.get("DB_USERNAME");
     String password = dotenv.get("DB_PASSWORD");
@@ -27,11 +33,27 @@ public class DatabaseConnection {
     config.setJdbcUrl(url);
     config.setUsername(username);
     config.setPassword(password);
-    dataSource = new HikariDataSource(config);
-
+    return new HikariDataSource(config);
   }
 
-  public static Connection getConnection() throws SQLException {
+  private static JedisPooled setUpRedisConnection() {
+    String host = dotenv.get("REDIS_HOST");
+    String port = dotenv.get("REDIS_PORT");
+    String password = dotenv.get("REDIS_PASSWORD");
+
+    if (host == null || port == null || password == null) {
+      throw new IllegalStateException("Redis environment variables are not set.");
+    }
+    int portNumber = Integer.parseInt(port);
+
+    return new JedisPooled(host, portNumber, "", password);
+  }
+
+  public static Connection getJdbcConnection() throws SQLException {
     return dataSource.getConnection();
+  }
+
+  public static JedisPooled getRedis() {
+    return jedis;
   }
 }
