@@ -38,7 +38,7 @@ public class JWTServiceImpl implements JWTService {
     String accessTokenExpires = dotenv.get("JWT_ACCESS_TOKEN_EXPIRES");
     String refreshTokenExpires = dotenv.get("JWT_REFRESH_TOKEN_EXPIRES");
 
-    if (secretKey == null) {
+    if (secretKey == null || secretKey.isBlank()) {
       throw new IllegalStateException("Missing JWT environment variables");
     }
 
@@ -53,7 +53,7 @@ public class JWTServiceImpl implements JWTService {
           .withJWTId(UUID.randomUUID().toString())
           .withIssuedAt(dt.atZone(ZoneId.systemDefault()).toInstant())
           .withExpiresAt(exp.atZone(ZoneId.systemDefault()).toInstant())
-          .withClaim("version", Long.toString(tokenVersion))
+          .withClaim("version", tokenVersion)
           .withClaim("type", tokenType)
           .withClaim("userId", user.getId())
           .withClaim("role", user.getRole().name().toLowerCase());
@@ -71,7 +71,7 @@ public class JWTServiceImpl implements JWTService {
     Map<String, String> map = new HashMap<>();
 
     String versionKey = String.format("user:%d:tokenVersion", user.getId());
-    if (jedis.exists(versionKey)) {
+    if (!jedis.exists(versionKey)) {
       jedis.set(versionKey, "0");
     }
 
@@ -121,7 +121,7 @@ public class JWTServiceImpl implements JWTService {
   @Override
   public long getTokenVersion(int userId) {
     String versionKey = String.format("user:%d:tokenVersion", userId);
-    if (jedis.exists(versionKey)) {
+    if (!jedis.exists(versionKey)) {
       jedis.set(versionKey, "0");
     }
     return Long.parseLong(jedis.get(versionKey));

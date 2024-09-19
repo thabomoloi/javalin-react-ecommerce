@@ -39,14 +39,13 @@ public class DatabaseConnection {
   private static JedisPooled setUpRedisConnection() {
     String host = dotenv.get("REDIS_HOST");
     String port = dotenv.get("REDIS_PORT");
-    String password = dotenv.get("REDIS_PASSWORD");
 
-    if (host == null || port == null || password == null) {
+    if (host == null || port == null) {
       throw new IllegalStateException("Redis environment variables are not set.");
     }
     int portNumber = Integer.parseInt(port);
 
-    return new JedisPooled(host, portNumber, "", password);
+    return new JedisPooled(host, portNumber);
   }
 
   public static Connection getJdbcConnection() throws SQLException {
