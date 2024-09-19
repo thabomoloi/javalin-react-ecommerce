@@ -1,7 +1,5 @@
 import * as api from "@/lib/api";
-import { ErrorDTO, ValidationErrorDTO } from "@/lib/dtos";
-import { SignUpSchemaType } from "@/lib/zod";
-import { AxiosError } from "axios";
+import { SignInSchemaType, SignUpSchemaType } from "@/lib/zod";
 import { redirect, ActionFunctionArgs } from "react-router-dom";
 
 // interface Updates {
@@ -10,20 +8,12 @@ import { redirect, ActionFunctionArgs } from "react-router-dom";
 
 export async function signUpAction({ request }: ActionFunctionArgs) {
   const data = (await request.json()) as SignUpSchemaType;
-  try {
-    await api.signUp(data);
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      const data = error.response?.data as ErrorDTO;
-      if (data.code == 400 && data.errors) {
-        return data as ValidationErrorDTO;
-      }
-      if (data.code == 400) {
-        return data;
-      }
-    }
-    throw error;
-  }
+  await api.signUp(data);
+  return redirect("/auth/signin");
+}
 
-  return redirect(`/auth/signin`);
+export async function signInAction({ request }: ActionFunctionArgs) {
+  const data = (await request.json()) as SignInSchemaType;
+  await api.signIn(data);
+  return redirect("/");
 }

@@ -9,6 +9,7 @@ import {
 import { Logo } from "../logo";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface AccountSidebarProps {
   children: React.ReactNode;
@@ -17,6 +18,7 @@ interface AccountSidebarProps {
 
 // Sidebar for users who are not authenticated
 function GuestAccountSidebar() {
+  const navigate = useNavigate();
   return (
     <SheetContent className="flex flex-col">
       <div className="overflow-auto">
@@ -31,27 +33,33 @@ function GuestAccountSidebar() {
         <Separator className="mt-4 mb-6" />
         <div>
           <div>
-            <p className="font-bold mb-2 text-lg">I have an account.</p>
-            <p className="mb-6 text-neutralCoolGray-10">
+            <p className="font-bold mb-2">I have an account.</p>
+            <p className="mb-6 text-neutral-10 text-sm">
               Fill in your email and password to access your account.
             </p>
-            <Button className="w-full" variant="secondary">
+            <Button
+              className="w-full"
+              onClick={() => navigate("/auth/signin")}
+              variant="secondary"
+            >
               Sign in
             </Button>
           </div>
           <Separator className="my-4" />
           <div>
-            <p className="font-bold mb-2 text-lg">I am a new customer.</p>
-            <p className="mb-2 text-neutralCoolGray-10">
+            <p className="font-bold mb-2">I am a new customer.</p>
+            <p className="mb-2 text-neutral-10 text-sm">
               By creating an account with Oasis Nourish, you will be able to
             </p>
-            <ul className="ml-6 mb-6 space-y-1 text-neutralCoolGray-8 list-disc list-inside">
+            <ul className="ml-6 mb-6 space-y-1 text-neutral-8 list-disc list-inside text-sm">
               <li>Checkout faster</li>
               <li>View and track your order</li>
               <li>Add multiple addresses</li>
               <li>Earn rewards</li>
             </ul>
-            <Button className="w-full">Sign up</Button>
+            <Button onClick={() => navigate("/auth/signup")} className="w-full">
+              Sign up
+            </Button>
           </div>
         </div>
       </div>
