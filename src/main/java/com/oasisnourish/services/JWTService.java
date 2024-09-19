@@ -22,6 +22,6 @@ public interface JWTService {
 
   Optional<DecodedJWT> getToken(String token);
 
-  long getTokenVersion(User user);
+  long getTokenVersion(int userId);
 
 }

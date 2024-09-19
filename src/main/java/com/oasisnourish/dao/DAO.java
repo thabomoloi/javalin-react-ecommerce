@@ -8,9 +8,9 @@ public interface DAO<T> {
 
   List<T> getAll(); // Get all records
 
-  T save(T t); // Save a record
+  Optional<T> save(T t); // Save a record
 
   Optional<T> update(T t); // Update a record
 
-  void delete(int id); // Delete a record
+  boolean delete(int id); // Delete a record
 }

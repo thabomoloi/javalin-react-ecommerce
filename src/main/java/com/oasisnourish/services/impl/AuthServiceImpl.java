@@ -1,6 +1,7 @@
 package com.oasisnourish.services.impl;
 
-import com.oasisnourish.dto.UserInputDTO;
+import com.oasisnourish.dto.user.UserAuthDTO;
+import com.oasisnourish.dto.user.UserCreateDTO;
 import com.oasisnourish.exceptions.EmailExistsException;
 import com.oasisnourish.exceptions.NotFoundException;
 import com.oasisnourish.models.User;
@@ -20,15 +21,15 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public User signUpUser(UserInputDTO userDTO) throws ConstraintViolationException, EmailExistsException {
+  public User signUpUser(UserCreateDTO userDTO) throws ConstraintViolationException, EmailExistsException {
     return userService.createUser(userDTO);
   }
 
   @Override
-  public User signInUser(String email, String password) {
+  public User signInUser(UserAuthDTO userDTO) {
     try {
-      User user = userService.getUserByEmail(email);
-      if (PasswordUtil.checkPassword(password, user.getPassword())) {
+      User user = userService.getUserByEmail(userDTO.getEmail());
+      if (PasswordUtil.checkPassword(userDTO.getPassword(), user.getPassword())) {
         return user;
       }
       throw new UnauthorizedResponse("Invalid email or password.");

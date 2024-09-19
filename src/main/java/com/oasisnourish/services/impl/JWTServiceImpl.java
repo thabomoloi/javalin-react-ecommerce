@@ -119,8 +119,8 @@ public class JWTServiceImpl implements JWTService {
   }
 
   @Override
-  public long getTokenVersion(User user) {
-    String versionKey = String.format("user:%d:tokenVersion", user.getId());
+  public long getTokenVersion(int userId) {
+    String versionKey = String.format("user:%d:tokenVersion", userId);
     if (jedis.exists(versionKey)) {
       jedis.set(versionKey, "0");
     }

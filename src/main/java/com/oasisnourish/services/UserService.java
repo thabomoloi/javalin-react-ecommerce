@@ -2,7 +2,8 @@ package com.oasisnourish.services;
 
 import java.util.List;
 
-import com.oasisnourish.dto.UserInputDTO;
+import com.oasisnourish.dto.user.UserCreateDTO;
+import com.oasisnourish.dto.user.UserUpdateDTO;
 import com.oasisnourish.exceptions.EmailExistsException;
 import com.oasisnourish.exceptions.NotFoundException;
 import com.oasisnourish.models.User;
@@ -16,9 +17,9 @@ public interface UserService {
 
   List<User> getAllUsers();
 
-  User createUser(UserInputDTO user) throws ConstraintViolationException, EmailExistsException;
+  User createUser(UserCreateDTO user) throws ConstraintViolationException, EmailExistsException;
 
-  User updateUser(UserInputDTO user) throws NotFoundException, ConstraintViolationException;
+  User updateUser(UserUpdateDTO user) throws NotFoundException, ConstraintViolationException;
 
   void deleteUser(int id) throws NotFoundException;
 }

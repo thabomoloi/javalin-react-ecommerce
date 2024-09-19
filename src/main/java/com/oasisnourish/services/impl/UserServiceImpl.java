@@ -3,8 +3,8 @@ package com.oasisnourish.services.impl;
 import java.util.List;
 
 import com.oasisnourish.dao.UserDAO;
-import com.oasisnourish.dto.UserInputDTO;
-import com.oasisnourish.dto.ValidationGroup;
+import com.oasisnourish.dto.user.UserCreateDTO;
+import com.oasisnourish.dto.user.UserUpdateDTO;
 import com.oasisnourish.exceptions.EmailExistsException;
 import com.oasisnourish.exceptions.NotFoundException;
 import com.oasisnourish.models.User;
@@ -39,10 +39,10 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User createUser(UserInputDTO userDTO) throws ConstraintViolationException, EmailExistsException {
-    ValidationUtil.validate(userDTO, ValidationGroup.Create.class);
+  public User createUser(UserCreateDTO userDTO) throws ConstraintViolationException, EmailExistsException {
+    ValidationUtil.validate(userDTO);
 
-    if (userDAO.getByEmail(userDTO.getEmail()) != null) {
+    if (userDAO.getByEmail(userDTO.getEmail()) == null) {
       throw new EmailExistsException("The email has already been taken");
     }
 
@@ -50,39 +50,26 @@ public class UserServiceImpl implements UserService {
     user.setName(userDTO.getName());
     user.setEmail(userDTO.getEmail());
     user.setPassword(PasswordUtil.hashPassword(userDTO.getPassword()));
-    return userDAO.save(user);
+    return userDAO.save(user).get();
   }
 
   @Override
-  public User updateUser(UserInputDTO userDTO) throws NotFoundException, ConstraintViolationException {
-    ValidationUtil.validate(userDTO, ValidationGroup.Update.class);
-
-    if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-      ValidationUtil.validate(userDTO, ValidationGroup.Create.class);
-    }
+  public User updateUser(UserUpdateDTO userDTO) throws NotFoundException, ConstraintViolationException {
+    ValidationUtil.validate(userDTO);
 
     User user = userDAO.get(userDTO.getId())
         .orElseThrow(() -> new NotFoundException("User with ID " + userDTO.getId() + " not found."));
 
-    if (!user.getEmail().equals(userDTO.getEmail())) {
-      user.setEmailVerified(null);
-    }
-
     user.setName(userDTO.getName());
     user.setEmail(userDTO.getEmail());
 
-    if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-      user.setPassword(PasswordUtil.hashPassword(userDTO.getPassword()));
-    }
     return userDAO.update(user).get();
 
   }
 
   @Override
   public void deleteUser(int id) throws NotFoundException {
-    User user = userDAO.get(id)
-        .orElseThrow(() -> new NotFoundException("User with ID " + id + " not found."));
-    userDAO.delete(user.getId());
+    userDAO.delete(id);
   }
 
 }

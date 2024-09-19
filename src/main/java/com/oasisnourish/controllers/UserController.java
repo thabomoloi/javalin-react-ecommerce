@@ -2,8 +2,9 @@ package com.oasisnourish.controllers;
 
 import java.util.stream.Collectors;
 
-import com.oasisnourish.dto.UserDTO;
-import com.oasisnourish.dto.UserInputDTO;
+import com.oasisnourish.dto.user.UserCreateDTO;
+import com.oasisnourish.dto.user.UserDTO;
+import com.oasisnourish.dto.user.UserUpdateDTO;
 import com.oasisnourish.exceptions.EmailExistsException;
 import com.oasisnourish.exceptions.NotFoundException;
 import com.oasisnourish.services.UserService;
@@ -32,7 +33,7 @@ public class UserController {
   }
 
   public void createUser(Context ctx) throws ConstraintViolationException, EmailExistsException {
-    var userDTO = ctx.bodyAsClass(UserInputDTO.class);
+    var userDTO = ctx.bodyAsClass(UserCreateDTO.class);
     var user = userService.createUser(userDTO);
     ctx.status(201);
     ctx.json(user);
@@ -40,7 +41,7 @@ public class UserController {
 
   public void updateUser(Context ctx) throws NotFoundException {
     int id = ctx.pathParamAsClass("userId", Integer.class).get();
-    var userDTO = ctx.bodyAsClass(UserInputDTO.class);
+    var userDTO = ctx.bodyAsClass(UserUpdateDTO.class);
     userDTO.setId(id);
     var user = userService.updateUser(userDTO);
     ctx.json(user);
@@ -49,6 +50,7 @@ public class UserController {
   public void deleteUser(Context ctx) throws NotFoundException {
     int id = ctx.pathParamAsClass("userId", Integer.class).get();
     userService.deleteUser(id);
+    ctx.status(204);
   }
 
 }

@@ -1,5 +1,9 @@
 package com.oasisnourish;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.oasisnourish.controllers.AuthController;
 import com.oasisnourish.controllers.ExceptionsControler;
 import com.oasisnourish.controllers.UserController;
@@ -22,7 +26,9 @@ public class App {
 
         UserService userService = new UserServiceImpl(new UserDAOImpl());
         UserController userController = new UserController(userService);
-        AuthController authController = new AuthController(userService, new AuthServiceImpl(),
+        AuthController authController = new AuthController(
+                userService,
+                new AuthServiceImpl(userService),
                 new JWTServiceImpl(DatabaseConnection.getRedis()));
 
         var app = Javalin.create(/* config */);
@@ -30,7 +36,7 @@ public class App {
 
         // Before
         app.beforeMatched(authController);
-        app.before(authController::createCookieDecodeHandler);
+        app.before(authController::decodeJWTFromCookie);
 
         // Exceptions
         app.exception(EmailExistsException.class, ExceptionsControler::badRequest);
@@ -39,8 +45,8 @@ public class App {
         app.exception(Exception.class, ExceptionsControler::internalServerError);
 
         // auth
-        app.post("/api/auth/signup", authController::signUpUser);
-        app.post("/api/auth/signin", authController::signInUser);
+        app.post("/api/auth/signup", authController::signUpUser, Role.ANYONE, Role.USER, Role.ADMIN);
+        app.post("/api/auth/signin", authController::signInUser, Role.ANYONE, Role.USER, Role.ADMIN);
 
         // Users
         app.get("/api/users/me", authController::getCurrentUser, Role.USER, Role.ADMIN);

@@ -1,4 +1,4 @@
-package com.oasisnourish.dto;
+package com.oasisnourish.dto.user;
 
 import java.time.LocalDateTime;
 
