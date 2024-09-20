@@ -41,8 +41,9 @@ public class App {
         app.exception(Exception.class, ExceptionsControler::internalServerError);
 
         // auth
-        app.post("/api/auth/signup", authController::signUpUser, Role.ANYONE, Role.USER, Role.ADMIN);
-        app.post("/api/auth/signin", authController::signInUser, Role.ANYONE, Role.USER, Role.ADMIN);
+        app.post("/api/auth/signup", authController::signUpUser, Role.ANYONE);
+        app.post("/api/auth/signin", authController::signInUser, Role.ANYONE);
+        app.post("/api/auth/refresh", authController::refreshToken, Role.ANYONE);
 
         // Users
         app.get("/api/users/me", authController::getCurrentUser, Role.USER, Role.ADMIN);

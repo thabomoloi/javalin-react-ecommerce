@@ -56,6 +56,10 @@ public class AuthController implements Handler {
     Optional.ofNullable(ctx.cookie(JWT_ACCESS_KEY))
         .flatMap(jwtService::getToken)
         .ifPresent(jwt -> ctx.sessionAttribute(JWT_ACCESS_KEY, jwt));
+
+    Optional.ofNullable(ctx.cookie(JWT_REFRESH_KEY))
+        .flatMap(jwtService::getToken)
+        .ifPresent(jwt -> ctx.sessionAttribute(JWT_REFRESH_KEY, jwt));
   }
 
   /**
@@ -88,6 +92,27 @@ public class AuthController implements Handler {
     ctx.cookie(createTokenCookie("access", tokens.get(JWT_ACCESS_KEY)));
     ctx.cookie(createTokenCookie("refresh", tokens.get(JWT_REFRESH_KEY)));
     ctx.status(200).result("Login successful.");
+  }
+
+  public void refreshToken(Context ctx) {
+    DecodedJWT jwt = ctx.sessionAttribute(JWT_REFRESH_KEY);
+    if (jwt != null) {
+      int userId = jwt.getClaim("userId").asInt();
+      long version = jwt.getClaim("version").asLong();
+
+      try {
+        if (version != jwtService.getTokenVersion(userId)) {
+          throw new UnauthorizedResponse();
+        }
+        User user = userService.getUserById(userId);
+        Map<String, String> tokens = jwtService.generateTokens(user);
+        ctx.cookie(createTokenCookie("access", tokens.get(JWT_ACCESS_KEY)));
+        ctx.cookie(createTokenCookie("refresh", tokens.get(JWT_REFRESH_KEY)));
+        ctx.status(200).result("Tokens refresh successful.");
+      } catch (NotFoundException e) {
+        throw new UnauthorizedResponse();
+      }
+    }
   }
 
   /**

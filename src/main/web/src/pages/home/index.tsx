@@ -1,3 +1,10 @@
+import { useAuth } from "@/lib/auth";
+
 export function HomePage() {
-  return <div>This is home page.</div>;
+  const auth = useAuth();
+  return (
+    <div>
+      {auth.currentUser == null ? "null" : JSON.stringify(auth.currentUser)}
+    </div>
+  );
 }
