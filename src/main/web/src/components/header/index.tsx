@@ -2,8 +2,9 @@ import { CircleUserRound, Menu, ShoppingCart } from "lucide-react";
 import { Logo } from "../logo";
 import { Button } from "../ui/button";
 import { SearchForm } from "./search-form";
-import { AccountSidebar, SidebarTrigger } from "../sidebar";
+import { AccountSidebar } from "../sidebar";
 import { NavLink } from "react-router-dom";
+import { AccountTrigger } from "../sidebar/account-sidebar";
 
 export function ShoppingCardButton() {
   return (
@@ -16,9 +17,9 @@ export function ShoppingCardButton() {
 export function AccountButton() {
   return (
     <AccountSidebar>
-      <SidebarTrigger>
+      <AccountTrigger>
         <CircleUserRound />
-      </SidebarTrigger>
+      </AccountTrigger>
     </AccountSidebar>
   );
 }

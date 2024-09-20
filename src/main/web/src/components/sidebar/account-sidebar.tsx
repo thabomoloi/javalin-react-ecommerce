@@ -1,20 +1,26 @@
-import React from "react";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
+  SheetTrigger,
 } from "../ui/sheet";
 import { Logo } from "../logo";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
-import { useNavigate } from "react-router-dom";
-
-interface AccountSidebarProps {
-  children: React.ReactNode;
-  authenticated?: boolean;
-}
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/lib/auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { LogOut, Package, Settings, User } from "lucide-react";
 
 // Sidebar for users who are not authenticated
 function GuestAccountSidebar() {
@@ -70,22 +76,55 @@ function GuestAccountSidebar() {
 // Sidebar for authenticated users
 function UserAccountSidebar() {
   return (
-    <SheetContent className="flex flex-col">
-      <div className="overflow-auto">
-        <p>Authenticated User Content</p>
-      </div>
-    </SheetContent>
+    <DropdownMenuContent className="w-48">
+      <DropdownMenuLabel className="font-bold">My Account</DropdownMenuLabel>
+      <DropdownMenuGroup className="font-semibold">
+        <DropdownMenuItem>
+          <Link to="/account/profile" className="flex items-center gap-4">
+            <User /> Profile
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link to="/account/orders" className="flex items-center gap-4">
+            <Package /> Orders
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link to="/account/settings" className="flex items-center gap-4">
+            <Settings /> Settings
+          </Link>
+        </DropdownMenuItem>
+      </DropdownMenuGroup>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem className="font-semibold">
+        <Link to="/auth/signout" className="flex items-center gap-4">
+          <LogOut /> Sign out
+        </Link>
+      </DropdownMenuItem>
+    </DropdownMenuContent>
   );
 }
 
-export function AccountSidebar({
-  children,
-  authenticated = false,
-}: AccountSidebarProps) {
+export function AccountSidebar({ children }: { children: React.ReactNode }) {
+  const { userIsAuthenticated } = useAuth();
+  if (!userIsAuthenticated) {
+    return (
+      <Sheet>
+        {children}
+        <GuestAccountSidebar />
+      </Sheet>
+    );
+  }
   return (
-    <Sheet>
+    <DropdownMenu>
       {children}
-      {authenticated ? <UserAccountSidebar /> : <GuestAccountSidebar />}
-    </Sheet>
+      <UserAccountSidebar />
+    </DropdownMenu>
   );
+}
+
+export function AccountTrigger({ children }: { children: React.ReactNode }) {
+  const { userIsAuthenticated } = useAuth();
+  const Trigger = userIsAuthenticated ? DropdownMenuTrigger : SheetTrigger;
+  return <Trigger>{children}</Trigger>;
 }
