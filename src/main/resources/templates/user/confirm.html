@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirm Your Email</title>
+  </head>
+  <body>
+    <p>Dear <span th:text="${user.getName()}">User</span>,</p>
+
+    <p>
+      Thank you for registering with Oasis Nourish. We are excited to have you
+      as a member of our community. To ensure the security of your account, we
+      require you to confirm your email address.
+    </p>
+
+    <p>
+      To confirm your email address, please click on the following link or copy
+      and paste it into your web browser:
+    </p>
+
+    <p style="text-align: center">
+      <a th:href="@{'confirm/{token}'(token=${token})}"
+        >Confirm Email Address</a
+      >
+    </p>
+    <p>The link expires after 1 hour.</p>
+    <p>
+      By confirming your email address, you will gain full access to all the
+      features and benefits that come with being a registered member of our
+      site.
+    </p>
+
+    <p>
+      If you did not create an account on our website, please disregard this
+      email.
+    </p>
+
+    <p>Thank you for your cooperation.</p>
+
+    <p>
+      Best regards,<br />
+      The Oasis Nourish Team
+    </p>
+  </body>
+</html>

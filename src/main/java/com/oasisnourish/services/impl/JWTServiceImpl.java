@@ -114,6 +114,13 @@ public class JWTServiceImpl implements JWTService {
   }
 
   @Override
+  public void deleteToken(String token) {
+    if (jedis.exists(token)) {
+      jedis.del(token);
+    }
+  }
+
+  @Override
   public JWTProvider<User> getProvider() {
     return provider;
   }

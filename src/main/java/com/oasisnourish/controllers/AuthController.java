@@ -115,6 +115,21 @@ public class AuthController implements Handler {
     }
   }
 
+  public void signOut(Context ctx) {
+    String accessToken = ctx.cookie(JWT_ACCESS_KEY);
+    String refreshToken = ctx.cookie(JWT_REFRESH_KEY);
+    if (accessToken == null) {
+      jwtService.deleteToken(accessToken);
+    }
+    if (refreshToken == null) {
+      jwtService.deleteToken(refreshToken);
+    }
+    ctx.removeCookie(JWT_ACCESS_KEY);
+    ctx.removeCookie(JWT_REFRESH_KEY);
+    invalidateSession(ctx);
+    ctx.status(200).result("Sign out successful.");
+  }
+
   /**
    * Main handler for securing routes, checking roles, and validating JWT tokens.
    */

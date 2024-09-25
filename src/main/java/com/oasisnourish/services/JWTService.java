@@ -24,4 +24,5 @@ public interface JWTService {
 
   long getTokenVersion(int userId);
 
+  void deleteToken(String token);
 }

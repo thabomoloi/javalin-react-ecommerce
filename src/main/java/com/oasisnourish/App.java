@@ -1,5 +1,6 @@
 package com.oasisnourish;
 
+import com.oasisnourish.config.TemplateEngineConfig;
 import com.oasisnourish.controllers.AuthController;
 import com.oasisnourish.controllers.ExceptionsControler;
 import com.oasisnourish.controllers.UserController;
@@ -8,10 +9,8 @@ import com.oasisnourish.database.DatabaseConnection;
 import com.oasisnourish.enums.Role;
 import com.oasisnourish.exceptions.EmailExistsException;
 import com.oasisnourish.exceptions.NotFoundException;
-import com.oasisnourish.services.UserService;
-import com.oasisnourish.services.impl.AuthServiceImpl;
-import com.oasisnourish.services.impl.JWTServiceImpl;
-import com.oasisnourish.services.impl.UserServiceImpl;
+import com.oasisnourish.services.*;
+import com.oasisnourish.services.impl.*;
 
 import io.javalin.Javalin;
 import jakarta.validation.ConstraintViolationException;
@@ -19,13 +18,14 @@ import jakarta.validation.ConstraintViolationException;
 public class App {
 
     public static void main(String[] args) {
-
+        EmailService emailService = new EmailServiceImpl(TemplateEngineConfig.getTemplateEngine());
         UserService userService = new UserServiceImpl(new UserDAOImpl());
+        TokenService tokenService = new TokenServiceImpl(DatabaseConnection.getRedis());
+        AuthService authService = new AuthServiceImpl(userService, emailService, tokenService);
+        JWTService jwtService = new JWTServiceImpl(DatabaseConnection.getRedis());
+
         UserController userController = new UserController(userService);
-        AuthController authController = new AuthController(
-                userService,
-                new AuthServiceImpl(userService),
-                new JWTServiceImpl(DatabaseConnection.getRedis()));
+        AuthController authController = new AuthController(userService, authService, jwtService);
 
         var app = Javalin.create(/* config */);
         app.start(7070);
@@ -43,6 +43,7 @@ public class App {
         // auth
         app.post("/api/auth/signup", authController::signUpUser, Role.ANYONE);
         app.post("/api/auth/signin", authController::signInUser, Role.ANYONE);
+        app.post("/api/auth/signout", authController::signOut, Role.USER, Role.ADMIN);
         app.post("/api/auth/refresh", authController::refreshToken, Role.ANYONE);
 
         // Users
