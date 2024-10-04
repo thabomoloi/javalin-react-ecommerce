@@ -8,7 +8,7 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
+import org.thymeleaf.context.IContext;
 import java.util.Properties;
 
 import com.oasisnourish.services.EmailService;
@@ -31,7 +31,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendEmail(String to, String subject, String templateName, Context context) {
+    public void sendEmail(String to, String subject, String templateName, IContext context) {
         // Set up mail server properties
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");

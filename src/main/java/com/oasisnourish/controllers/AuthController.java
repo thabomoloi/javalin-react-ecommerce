@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
+import org.thymeleaf.context.WebContext;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.oasisnourish.config.EnvironmentConfig;
@@ -79,6 +80,8 @@ public class AuthController implements Handler {
   public void signUpUser(Context ctx) throws ConstraintViolationException, EmailExistsException {
     UserCreateDTO userDTO = ctx.bodyAsClass(UserCreateDTO.class);
     User user = authService.signUpUser(userDTO);
+    authService.sendConfirmationToken(user, thymeleafContext);
+
     ctx.status(201).json(user);
   }
 

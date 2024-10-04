@@ -30,13 +30,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public User signUpUser(UserCreateDTO userDTO) throws ConstraintViolationException, EmailExistsException {
-    User user = userService.createUser(userDTO);
-    String token = tokenService.generateToken("confirm-email", user);
-    Context context = new Context();
-    context.setVariable("user", user);
-    context.setVariable("token", token);
-    emailService.sendEmail(user.getEmail(), "Welcome to Oasis Nourish", "user/confirm", context);
-    return user;
+    return userService.createUser(userDTO);
   }
 
   @Override
@@ -51,6 +45,15 @@ public class AuthServiceImpl implements AuthService {
     } catch (NotFoundException e) {
       throw new UnauthorizedResponse("Invalid email or password.");
     }
+  }
+
+  @Override
+  public void sendConfirmationToken(User user) {
+    String token = tokenService.generateToken("confirm-email", user);
+    Context context = new Context();
+    context.setVariable("user", user);
+    context.setVariable("token", token);
+    emailService.sendEmail(user.getEmail(), "Welcome to Oasis Nourish", "user/confirm", context);
   }
 
 }
